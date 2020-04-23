@@ -28,7 +28,7 @@ type Submission struct {
 	NumberOfFiles      int     `csv:"NumberOfFiles"`
 }
 
-func parseLearnReceipt(inputPath string) (Submission, error) {
+func ParseLearnReceipt(inputPath string) (Submission, error) {
 
 	sub := Submission{}
 
@@ -143,7 +143,7 @@ func processFilename(line string, sub *Submission) {
 	sub.Filename = strings.TrimSpace(line)
 }
 
-func writeSubmissionsToCSV(subs []Submission, outputPath string) error {
+func WriteSubmissionsToCSV(subs []Submission, outputPath string) error {
 	// wrap the marshalling library in case we need converters etc later
 	file, err := os.OpenFile(outputPath, os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {

@@ -1,6 +1,8 @@
 package parselearn
 
 import (
+	"bufio"
+	"os"
 	"testing"
 )
 
@@ -80,7 +82,7 @@ func TestFilename(t *testing.T) {
 
 func TestParseFile(t *testing.T) {
 
-	sub, err := parseLearnReceipt("./test/receipt2.txt")
+	sub, err := ParseLearnReceipt("./test/receipt2.txt")
 	if err != nil {
 		t.Error(err)
 	}
@@ -94,5 +96,46 @@ func TestParseFile(t *testing.T) {
 	assertEqual(t, sub.Comments, "There are no student comments for this assignment.")
 	assertEqual(t, sub.OriginalFilename, "ENGI1234-Bxxxxxx.pdf")
 	assertEqual(t, sub.Filename, "Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_ENGI1234-Bxxxxxx.pdf")
+
+}
+
+var expected1 = `FirstName,LastName,Matriculation,Assignment,DateSubmitted,SubmissionField,Comments,OriginalFilename,Filename,ExamNumber,MatriculationError,ExamNumberError,FiletypeError,FilenameError,NumberOfPages,FilesizeMB,NumberOfFiles`
+
+var expected2 = `First,Last,sxxxxxxx,Practice Exam Drop Box,"Monday, dd April yyyy hh:mm:ss o'clock BST",There is no student submission text data for this assignment.,There are no student comments for this assignment.,OnlineExam-Bxxxxxx.pdf,Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf,,,,,,,0,1`
+
+var expected3 = `John,Smith,s00000000,Some Exam Or Other,"Tuesday, dd April yyyy hh:mm:ss o'clock BST",There is no student submission text data for this assignment.,There are no student comments for this assignment.,ENGI1234-Bxxxxxx.pdf,Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_ENGI1234-Bxxxxxx.pdf,,,,,,,0,1`
+
+func TestMarshallToFile(t *testing.T) {
+
+	sub1, err := ParseLearnReceipt("./test/receipt1.txt")
+	if err != nil {
+		t.Error(err)
+	}
+
+	sub2, err := ParseLearnReceipt("./test/receipt2.txt")
+	if err != nil {
+		t.Error(err)
+	}
+
+	subs := []Submission{sub1, sub2}
+
+	WriteSubmissionsToCSV(subs, "./test/out.csv")
+
+	file, err := os.Open("./test/out.csv")
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	scanner.Scan()
+	assertEqual(t, scanner.Text(), expected1)
+	scanner.Scan()
+	assertEqual(t, scanner.Text(), expected2)
+	scanner.Scan()
+	assertEqual(t, scanner.Text(), expected3)
 
 }
