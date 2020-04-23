@@ -77,3 +77,22 @@ func TestFilename(t *testing.T) {
 	processFilename("Filename: Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf", &sub)
 	assertEqual(t, sub.Filename, "Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf")
 }
+
+func TestParseFile(t *testing.T) {
+
+	sub, err := parseLearnReceipt("./test/receipt2.txt")
+	if err != nil {
+		t.Error(err)
+	}
+
+	assertEqual(t, sub.FirstName, "John")
+	assertEqual(t, sub.LastName, "Smith")
+	assertEqual(t, sub.Matriculation, "s00000000")
+	assertEqual(t, sub.Assignment, "Some Exam Or Other")
+	assertEqual(t, sub.DateSubmitted, "Tuesday, dd April yyyy hh:mm:ss o'clock BST")
+	assertEqual(t, sub.SubmissionField, "There is no student submission text data for this assignment.")
+	assertEqual(t, sub.Comments, "There are no student comments for this assignment.")
+	assertEqual(t, sub.OriginalFilename, "ENGI1234-Bxxxxxx.pdf")
+	assertEqual(t, sub.Filename, "Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_ENGI1234-Bxxxxxx.pdf")
+
+}

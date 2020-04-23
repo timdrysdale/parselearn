@@ -53,8 +53,10 @@ SCAN:
 		case strings.HasPrefix(line, "Date Submitted:"):
 			processDateSubmitted(line, &sub)
 		case strings.HasPrefix(line, "Submission Field:"):
+			scanner.Scan()
 			processSubmission(scanner.Text(), &sub)
 		case strings.HasPrefix(line, "Comments:"):
+			scanner.Scan()
 			processComments(scanner.Text(), &sub)
 		case strings.HasPrefix(line, "Files:"):
 			break SCAN
@@ -74,9 +76,11 @@ SCAN:
 
 		switch {
 		case strings.HasPrefix(line, "Original filename:"):
+
 			processOriginalFilename(line, &sub)
 			sub.NumberOfFiles++
 		case strings.HasPrefix(line, "Filename:"):
+
 			processFilename(line, &sub)
 		default:
 			continue
