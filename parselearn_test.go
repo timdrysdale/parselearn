@@ -19,17 +19,21 @@ func TestProcessName(t *testing.T) {
 	assertEqual(t, sub.Matriculation, "sxxxxxxx")
 }
 
+func TestProcessAssignment(t *testing.T) {
+
+	sub := Submission{}
+	processAssignment("Assignment: Practice Exam Drop Box", &sub)
+	assertEqual(t, sub.Assignment, "Practice Exam Drop Box")
+}
+
+func TestDateSubmitted(t *testing.T) {
+
+	sub := Submission{}
+	processDateSubmitted("Date Submitted: Monday, dd April yyyy hh:mm:ss o'clock BST", &sub)
+	assertEqual(t, sub.DateSubmitted, "Monday, dd April yyyy hh:mm:ss o'clock BST")
+}
+
 /*
-//Name: First Last (sxxxxxxx)
-func processName(line string, sub *Submission) {
-	return errors.New("Not Implemented")
-}
-
-//Assignment: Practice Exam Drop Box
-func processAssignment(line string, sub *Submission) {
-	return errors.New("Not Implemented")
-}
-
 //Date Submitted: Monday, dd April yyyy hh:mm:ss o'clock BST
 func processDateSubmitted(line string, sub *Submission) {
 	return errors.New("Not Implemented")
@@ -38,35 +42,26 @@ func processDateSubmitted(line string, sub *Submission) {
 //Submission Field:
 //There is no student submission text data for this assignment.
 func processSubmission(line string, sub *Submission) {
-	return errors.New("Not Implemented")
+
 }
 
 //Comments:
 //There are no student comments for this assignment
 func processComments(line string, sub *Submission) {
-	return errors.New("Not Implemented")
+
 }
 
 //Files:
 //	Original filename: OnlineExam-Bxxxxxx.pdf
 //	Filename: Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf
 func processOriginalFilename(line string, sub *Submission) {
-	return errors.New("Not Implemented")
+
 }
 func processFilename(line string, sub *Submission) {
-	return errors.New("Not Implemented")
-}
 
-func writeSubmissionsToCSV(subs []Submission, outpath string) error {
-	// wrap the marshalling library in case we need converters etc later
-	file, err := os.OpenFile(inputPath, os.O_RDWR|os.O_CREATE, os.ModePerm)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	return gocsv.MarshalFile(&subs, outpath)
 }
 */
+
 //Name: First Last (sxxxxxxx)
 //Assignment: Practice Exam Drop Box
 //Date Submitted: Monday, dd April yyyy hh:mm:ss o'clock BST

@@ -100,12 +100,16 @@ func processName(line string, sub *Submission) {
 
 //Assignment: Practice Exam Drop Box
 func processAssignment(line string, sub *Submission) {
-
+	line = strings.TrimSpace(line)
+	line = strings.TrimPrefix(line, "Assignment:")
+	sub.Assignment = strings.TrimSpace(line)
 }
 
 //Date Submitted: Monday, dd April yyyy hh:mm:ss o'clock BST
 func processDateSubmitted(line string, sub *Submission) {
-
+	line = strings.TrimSpace(line)
+	line = strings.TrimPrefix(line, "Date Submitted:")
+	sub.DateSubmitted = strings.TrimSpace(line)
 }
 
 //Submission Field:
