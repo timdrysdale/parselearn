@@ -4,6 +4,23 @@ import (
 	"testing"
 )
 
+// Example receipt (anonymised)
+
+//Name: First Last (sxxxxxxx)
+//Assignment: Practice Exam Drop Box
+//Date Submitted: Monday, dd April yyyy hh:mm:ss o'clock BST
+//Current Mark: Needs Marking
+//
+//Submission Field:
+//There is no student submission text data for this assignment.
+//
+//Comments:
+//There are no student comments for this assignment.
+//
+//Files:
+//	Original filename: OnlineExam-Bxxxxxx.pdf
+//	Filename: Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf
+
 func assertEqual(t *testing.T, a interface{}, b interface{}) {
 	if a != b {
 		t.Fatalf("%s != %s", a, b)
@@ -47,41 +64,16 @@ func TestComments(t *testing.T) {
 	assertEqual(t, sub.SubmissionField, "There are no student comments for this assignment")
 }
 
-/*
-//Submission Field:
-//There is no student submission text data for this assignment.
-func processSubmission(line string, sub *Submission) {
+func TestOriginalFilename(t *testing.T) {
 
+	sub := Submission{}
+	processOriginalFilename("Original filename: OnlineExam-Bxxxxxx.pdf", &sub)
+	assertEqual(t, sub.OriginalFilename, "OnlineExam-Bxxxxxx.pdf")
 }
 
-//Comments:
-//There are no student comments for this assignment
-func processComments(line string, sub *Submission) {
+func TestFilename(t *testing.T) {
 
+	sub := Submission{}
+	processFilename("Filename: Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf", &sub)
+	assertEqual(t, sub.Filename, "Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf")
 }
-
-//Files:
-//	Original filename: OnlineExam-Bxxxxxx.pdf
-//	Filename: Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf
-func processOriginalFilename(line string, sub *Submission) {
-
-}
-func processFilename(line string, sub *Submission) {
-
-}
-*/
-
-//Name: First Last (sxxxxxxx)
-//Assignment: Practice Exam Drop Box
-//Date Submitted: Monday, dd April yyyy hh:mm:ss o'clock BST
-//Current Mark: Needs Marking
-//
-//Submission Field:
-//There is no student submission text data for this assignment.
-//
-//Comments:
-//There are no student comments for this assignment.
-//
-//Files:
-//	Original filename: OnlineExam-Bxxxxxx.pdf
-//	Filename: Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf

@@ -129,10 +129,14 @@ func processComments(line string, sub *Submission) {
 //	Original filename: OnlineExam-Bxxxxxx.pdf
 //	Filename: Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf
 func processOriginalFilename(line string, sub *Submission) {
-
+	line = strings.TrimSpace(line)
+	line = strings.TrimPrefix(line, "Original filename:")
+	sub.OriginalFilename = strings.TrimSpace(line)
 }
 func processFilename(line string, sub *Submission) {
-
+	line = strings.TrimSpace(line)
+	line = strings.TrimPrefix(line, "Filename:")
+	sub.Filename = strings.TrimSpace(line)
 }
 
 func writeSubmissionsToCSV(subs []Submission, outputPath string) error {
