@@ -33,12 +33,21 @@ func TestDateSubmitted(t *testing.T) {
 	assertEqual(t, sub.DateSubmitted, "Monday, dd April yyyy hh:mm:ss o'clock BST")
 }
 
-/*
-//Date Submitted: Monday, dd April yyyy hh:mm:ss o'clock BST
-func processDateSubmitted(line string, sub *Submission) {
-	return errors.New("Not Implemented")
+func TestSubmissionField(t *testing.T) {
+
+	sub := Submission{}
+	processSubmission("There is no student submission text data for this assignment.", &sub)
+	assertEqual(t, sub.SubmissionField, "There is no student submission text data for this assignment.")
 }
 
+func TestComments(t *testing.T) {
+
+	sub := Submission{}
+	processSubmission("There are no student comments for this assignment", &sub)
+	assertEqual(t, sub.SubmissionField, "There are no student comments for this assignment")
+}
+
+/*
 //Submission Field:
 //There is no student submission text data for this assignment.
 func processSubmission(line string, sub *Submission) {

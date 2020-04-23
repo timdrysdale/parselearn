@@ -115,13 +115,14 @@ func processDateSubmitted(line string, sub *Submission) {
 //Submission Field:
 //There is no student submission text data for this assignment.
 func processSubmission(line string, sub *Submission) {
+	sub.SubmissionField = strings.TrimSpace(line)
 
 }
 
 //Comments:
 //There are no student comments for this assignment
 func processComments(line string, sub *Submission) {
-
+	sub.Comments = strings.TrimSpace(line)
 }
 
 //Files:
