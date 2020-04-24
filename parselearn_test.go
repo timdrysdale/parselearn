@@ -2,6 +2,7 @@ package parselearn
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"testing"
 )
@@ -32,9 +33,12 @@ func assertEqual(t *testing.T, a interface{}, b interface{}) {
 func TestProcessName(t *testing.T) {
 
 	sub := Submission{}
-	processName("Name: First Last (sxxxxxxx)", &sub)
-	assertEqual(t, sub.FirstName, "First")
-	assertEqual(t, sub.LastName, "Last")
+
+	processName("Name: Donald The Duck (sxxxxxxx)", &sub)
+	assertEqual(t, sub.FirstName, "-")
+
+	fmt.Printf("[%s]\n[%s]\n", sub.LastName, "Donald The Duck")
+	assertEqual(t, sub.LastName, "Donald The Duck")
 	assertEqual(t, sub.Matriculation, "sxxxxxxx")
 }
 
@@ -87,8 +91,8 @@ func TestParseFile(t *testing.T) {
 		t.Error(err)
 	}
 
-	assertEqual(t, sub.FirstName, "John")
-	assertEqual(t, sub.LastName, "Smith")
+	assertEqual(t, sub.FirstName, "-")
+	assertEqual(t, sub.LastName, "John Smith")
 	assertEqual(t, sub.Matriculation, "s00000000")
 	assertEqual(t, sub.Assignment, "Some Exam Or Other")
 	assertEqual(t, sub.DateSubmitted, "Tuesday, dd April yyyy hh:mm:ss o'clock BST")
@@ -101,9 +105,9 @@ func TestParseFile(t *testing.T) {
 
 var expected1 = `FirstName,LastName,Matriculation,Assignment,DateSubmitted,SubmissionField,Comments,OriginalFilename,Filename,ExamNumber,MatriculationError,ExamNumberError,FiletypeError,FilenameError,NumberOfPages,FilesizeMB,NumberOfFiles`
 
-var expected2 = `First,Last,sxxxxxxx,Practice Exam Drop Box,"Monday, dd April yyyy hh:mm:ss o'clock BST",There is no student submission text data for this assignment.,There are no student comments for this assignment.,OnlineExam-Bxxxxxx.pdf,Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf,,,,,,,0,1`
+var expected2 = `-,First Last,sxxxxxxx,Practice Exam Drop Box,"Monday, dd April yyyy hh:mm:ss o'clock BST",There is no student submission text data for this assignment.,There are no student comments for this assignment.,OnlineExam-Bxxxxxx.pdf,Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf,,,,,,,0,1`
 
-var expected3 = `John,Smith,s00000000,Some Exam Or Other,"Tuesday, dd April yyyy hh:mm:ss o'clock BST",There is no student submission text data for this assignment.,There are no student comments for this assignment.,ENGI1234-Bxxxxxx.pdf,Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_ENGI1234-Bxxxxxx.pdf,,,,,,,0,1`
+var expected3 = `-,John Smith,s00000000,Some Exam Or Other,"Tuesday, dd April yyyy hh:mm:ss o'clock BST",There is no student submission text data for this assignment.,There are no student comments for this assignment.,ENGI1234-Bxxxxxx.pdf,Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_ENGI1234-Bxxxxxx.pdf,,,,,,,0,1`
 
 func TestMarshallToFile(t *testing.T) {
 

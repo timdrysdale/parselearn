@@ -93,13 +93,17 @@ SCAN:
 
 //Name: First Last (sxxxxxxx)
 func processName(line string, sub *Submission) {
-	tokens := strings.Split(line, " ")
-	sub.FirstName = strings.TrimSpace(tokens[1])
-	sub.LastName = strings.TrimSpace(tokens[2])
-	matric := strings.TrimSpace(tokens[3])
-	matric = strings.TrimPrefix(matric, "(")
-	matric = strings.TrimSuffix(matric, ")")
-	sub.Matriculation = strings.TrimSpace(matric)
+
+	m := strings.Index(line, ":")
+	n := strings.Index(line, "(")
+	p := strings.Index(line, ")")
+
+	name := strings.TrimSpace(line[m+1 : n])
+	matric := strings.TrimSpace(line[n+1 : p])
+
+	sub.FirstName = "-"
+	sub.LastName = name
+	sub.Matriculation = matric
 }
 
 //Assignment: Practice Exam Drop Box
