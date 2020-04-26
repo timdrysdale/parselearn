@@ -71,17 +71,25 @@ SCAN:
 
 	sub.NumberOfFiles = 0
 
+	// we will take the first file as the one we expect to see renamed
+	gotOriginal := false
+	gotNew := false
+
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 
 		switch {
 		case strings.HasPrefix(line, "Original filename:"):
-
-			processOriginalFilename(line, &sub)
+			if !gotOriginal {
+				processOriginalFilename(line, &sub)
+				gotOriginal = true
+			}
 			sub.NumberOfFiles++
 		case strings.HasPrefix(line, "Filename:"):
-
-			processFilename(line, &sub)
+			if !gotNew {
+				processFilename(line, &sub)
+				gotNew = true
+			}
 		default:
 			continue
 		}
