@@ -11,6 +11,7 @@ import (
 
 type Submission struct {
 	Revision           int     `csv:"Revision"`
+	Action             string  `csv:"Action"`
 	FirstName          string  `csv:"FirstName"`
 	LastName           string  `csv:"LastName"`
 	Matriculation      string  `csv:"Matriculation"`
@@ -55,6 +56,8 @@ SCAN:
 		switch {
 		case strings.HasPrefix(lline, "revision:"):
 			processRevision(line, &sub)
+		case strings.HasPrefix(lline, "action:"):
+			processAction(line, &sub)
 		case strings.HasPrefix(lline, "name:"):
 			processName(line, &sub)
 		case strings.HasPrefix(lline, "assignment:"):
@@ -127,6 +130,13 @@ func processRevision(line string, sub *Submission) {
 	}
 
 	sub.Revision = int(rev)
+}
+
+// we lower case this one since made by hand
+func processAction(line string, sub *Submission) {
+	line = strings.TrimSpace(line)
+	line = strings.TrimPrefix(strings.ToLower(line), "action:")
+	sub.Action = strings.TrimSpace(line)
 }
 
 //Name: First Last (sxxxxxxx)
