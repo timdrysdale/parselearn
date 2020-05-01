@@ -2,7 +2,6 @@ package parselearn
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"testing"
 )
@@ -30,6 +29,14 @@ func assertEqual(t *testing.T, a interface{}, b interface{}) {
 	}
 }
 
+func TestProcessRevision(t *testing.T) {
+
+	sub := Submission{}
+
+	processRevision("Revision: 2", &sub)
+	assertEqual(t, sub.Revision, 2)
+
+}
 func TestProcessName(t *testing.T) {
 
 	sub := Submission{}
@@ -37,7 +44,6 @@ func TestProcessName(t *testing.T) {
 	processName("Name: Donald The Duck (sxxxxxxx)", &sub)
 	assertEqual(t, sub.FirstName, "-")
 
-	fmt.Printf("[%s]\n[%s]\n", sub.LastName, "Donald The Duck")
 	assertEqual(t, sub.LastName, "Donald The Duck")
 	assertEqual(t, sub.Matriculation, "sxxxxxxx")
 }
@@ -103,11 +109,13 @@ func TestParseFile(t *testing.T) {
 
 }
 
-var expected1 = `FirstName,LastName,Matriculation,Assignment,DateSubmitted,SubmissionField,Comments,OriginalFilename,Filename,ExamNumber,MatriculationError,ExamNumberError,FiletypeError,FilenameError,NumberOfPages,FilesizeMB,NumberOfFiles`
+var expected1 = `Revision,FirstName,LastName,Matriculation,Assignment,DateSubmitted,SubmissionField,Comments,OriginalFilename,Filename,ExamNumber,MatriculationError,ExamNumberError,FiletypeError,FilenameError,NumberOfPages,FilesizeMB,NumberOfFiles`
 
-var expected2 = `-,First Last,sxxxxxxx,Practice Exam Drop Box,"Monday, dd April yyyy hh:mm:ss o'clock BST",There is no student submission text data for this assignment.,There are no student comments for this assignment.,OnlineExam-Bxxxxxx.pdf,Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf,,,,,,,0,1`
+var expected2 = `0,-,First Last,sxxxxxxx,Practice Exam Drop Box,"Monday, dd April yyyy hh:mm:ss o'clock BST",There is no student submission text data for this assignment.,There are no student comments for this assignment.,OnlineExam-Bxxxxxx.pdf,Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf,,,,,,,0,1`
 
-var expected3 = `-,John Smith,s00000000,Some Exam Or Other,"Tuesday, dd April yyyy hh:mm:ss o'clock BST",There is no student submission text data for this assignment.,There are no student comments for this assignment.,ENGI1234-Bxxxxxx.pdf,Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_ENGI1234-Bxxxxxx.pdf,,,,,,,0,1`
+var expected3 = `0,-,John Smith,s00000000,Some Exam Or Other,"Tuesday, dd April yyyy hh:mm:ss o'clock BST",There is no student submission text data for this assignment.,There are no student comments for this assignment.,ENGI1234-Bxxxxxx.pdf,Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_ENGI1234-Bxxxxxx.pdf,,,,,,,0,1`
+
+var expected4 = `1,-,First Last,sxxxxxxx,Practice Exam Drop Box,"Monday, dd April yyyy hh:mm:ss o'clock BST",There is no student submission text data for this assignment.,There are no student comments for this assignment.,OnlineExam-Bxxxxxx.pdf,Practice Exam Drop Box_sxxxxxxx_attempt_yyyy-mm-dd-hh-mm-ss_OnlineExam-Bxxxxxx.pdf,,,,,,,0,1`
 
 func TestMarshallToFile(t *testing.T) {
 
@@ -120,8 +128,11 @@ func TestMarshallToFile(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-
-	subs := []Submission{sub1, sub2}
+	sub3, err := ParseLearnReceipt("./test/receipt3.txt")
+	if err != nil {
+		t.Error(err)
+	}
+	subs := []Submission{sub1, sub2, sub3}
 
 	WriteSubmissionsToCSV(subs, "./test/out.csv")
 
@@ -141,5 +152,6 @@ func TestMarshallToFile(t *testing.T) {
 	assertEqual(t, scanner.Text(), expected2)
 	scanner.Scan()
 	assertEqual(t, scanner.Text(), expected3)
-
+	scanner.Scan()
+	assertEqual(t, scanner.Text(), expected4)
 }

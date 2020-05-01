@@ -3,12 +3,14 @@ package parselearn
 import (
 	"bufio"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/gocarina/gocsv"
 )
 
 type Submission struct {
+	Revision           int     `csv:"Revision"`
 	FirstName          string  `csv:"FirstName"`
 	LastName           string  `csv:"LastName"`
 	Matriculation      string  `csv:"Matriculation"`
@@ -45,20 +47,27 @@ func ParseLearnReceipt(inputPath string) (Submission, error) {
 SCAN:
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
+
+		//use for case insenstive field identification only
+		//need to keep capitalisation in filenames
+		lline := strings.ToLower(line)
+
 		switch {
-		case strings.HasPrefix(line, "Name:"):
+		case strings.HasPrefix(lline, "revision:"):
+			processRevision(line, &sub)
+		case strings.HasPrefix(lline, "name:"):
 			processName(line, &sub)
-		case strings.HasPrefix(line, "Assignment:"):
+		case strings.HasPrefix(lline, "assignment:"):
 			processAssignment(line, &sub)
-		case strings.HasPrefix(line, "Date Submitted:"):
+		case strings.HasPrefix(lline, "date submitted:"):
 			processDateSubmitted(line, &sub)
-		case strings.HasPrefix(line, "Submission Field:"):
+		case strings.HasPrefix(lline, "submission field:"):
 			scanner.Scan()
 			processSubmission(scanner.Text(), &sub)
-		case strings.HasPrefix(line, "Comments:"):
+		case strings.HasPrefix(lline, "comments:"):
 			scanner.Scan()
 			processComments(scanner.Text(), &sub)
-		case strings.HasPrefix(line, "Files:"):
+		case strings.HasPrefix(lline, "files:"):
 			break SCAN
 		default:
 			continue
@@ -77,15 +86,15 @@ SCAN:
 
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
-
+		lline := strings.ToLower(line) //used for case insensitive field identification
 		switch {
-		case strings.HasPrefix(line, "Original filename:"):
+		case strings.HasPrefix(lline, "original filename:"):
 			if !gotOriginal {
 				processOriginalFilename(line, &sub)
 				gotOriginal = true
 			}
 			sub.NumberOfFiles++
-		case strings.HasPrefix(line, "Filename:"):
+		case strings.HasPrefix(lline, "filename:"):
 			if !gotNew {
 				processFilename(line, &sub)
 				gotNew = true
@@ -97,6 +106,27 @@ SCAN:
 	}
 
 	return sub, scanner.Err()
+}
+
+//Name: First Last (sxxxxxxx)
+func processRevision(line string, sub *Submission) {
+
+	m := strings.Index(line, ":")
+	n := len(line)
+
+	revision := strings.TrimSpace(line[m+1 : n])
+
+	var rev int64
+
+	rev, err := strconv.ParseInt(strings.TrimSpace(revision), 10, 64)
+
+	if err != nil {
+
+		rev = 0
+
+	}
+
+	sub.Revision = int(rev)
 }
 
 //Name: First Last (sxxxxxxx)
