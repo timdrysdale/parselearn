@@ -31,6 +31,34 @@ type Submission struct {
 	NumberOfFiles      int     `csv:"NumberOfFiles"`
 }
 
+func GetFilePaths(inputPath string) ([]string, error) {
+
+	files := []string{}
+
+	file, err := os.Open(inputPath)
+
+	if err != nil {
+		return files, err
+	}
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		lline := strings.ToLower(line) //used for case insensitive field identification
+		if strings.HasPrefix(lline, "filename:") {
+			line = strings.TrimSpace(line)
+			line = strings.TrimPrefix(line, "Filename:")
+			line = strings.TrimSpace(line)
+			files = append(files, line)
+		}
+	}
+
+	return files, nil
+}
+
 func ParseLearnReceipt(inputPath string) (Submission, error) {
 
 	sub := Submission{}

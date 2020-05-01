@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // Example receipt (anonymised)
@@ -161,4 +163,13 @@ func TestMarshallToFile(t *testing.T) {
 	assertEqual(t, scanner.Text(), expected3)
 	scanner.Scan()
 	assertEqual(t, scanner.Text(), expected4)
+}
+
+func TestGetFiles(t *testing.T) {
+
+	list, err := GetFilePaths("./test/receiptmulti.txt")
+
+	assert.NoError(t, err)
+	assert.Equal(t, []string{"A B-C.pdf", "D-D F.pdf", "G H_I J.pdf", "G H_I J Copy.pdf", "G H_I J Copy (2).pdf"}, list)
+
 }
